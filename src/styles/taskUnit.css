@@ -1,0 +1,7 @@
+.pause:hover, .completed:hover {
+    cursor: pointer;
+}
+
+.pause, .completed {
+    user-select: none;
+}

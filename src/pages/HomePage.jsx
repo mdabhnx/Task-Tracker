@@ -1,5 +1,6 @@
 import React from "react";
 import InputContainer from "../components/InputContainer";
+import TaskUnit from "../components/TaskUnit";
 
 const HomePage = () => {
   return (
@@ -23,8 +24,26 @@ const HomePage = () => {
       >
         Create a New Task
       </header>
+
+      <div style={{ marginTop: "2%" }}>{/* <InputContainer /> */}</div>
+
       <div style={{ marginTop: "2%" }}>
-        <InputContainer />
+        <header
+          style={{
+            fontFamily: "Inconsolata",
+            fontSize: "25px",
+            marginTop: "20px",
+            letterSpacing: "5px",
+            wordSpacing: "4px",
+            textTransform: "uppercase",
+            textAlign: "center",
+            marginBottom: "2%",
+          }}
+        >
+          -- Current Tasks --
+        </header>
+
+        <TaskUnit />
       </div>
     </div>
   );
