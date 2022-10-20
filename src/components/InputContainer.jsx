@@ -1,8 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
+
+import { collection, addDoc } from "firebase/firestore";
+import { firestoreApp } from "../firebase/firebase";
 
 const InputContainer = () => {
-  const formSubmitHandler = (event) => {
+  const [isCreating, setIsCreating] = useState(false);
+
+  const [taskName, setTaskName] = useState("");
+  const [taskTimeInMin, setTaskTimeInMin] = useState("");
+  const [taskTimeinHour, setTaskTimeinHour] = useState("");
+
+  const formSubmitHandler = async (event) => {
     event.preventDefault();
+    setIsCreating(true);
+    const taskData = {
+      task: taskName,
+      taskHr: taskTimeinHour === "" ? 0 : taskTimeinHour,
+      taskMin: parseInt(taskTimeInMin),
+      tarckerTaskHr: 0,
+      tarckerTaskMin: 0,
+      completeStatus: false,
+      createdAt: new Date(),
+    };
+
+    try {
+      const docRef = await addDoc(
+        collection(firestoreApp, process.env.REACT_APP_ROOT_COLLECTION_NAME),
+        taskData
+      );
+
+      console.log("document has been added to db", docRef.id);
+    } catch (error) {
+      console.error(error);
+    }
+    setTaskName("");
+    setTaskTimeInMin("");
+    setTaskTimeinHour("");
+    setIsCreating(false);
   };
   return (
     <div style={{ display: "flex" }}>
@@ -18,6 +52,9 @@ const InputContainer = () => {
             borderRadius: "10px",
           }}
           placeholder="Your Task Name"
+          value={taskName}
+          onChange={(e) => setTaskName(e.target.value)}
+          disabled={isCreating}
           required
         />
         <input
@@ -34,7 +71,9 @@ const InputContainer = () => {
           placeholder="hour"
           min={0}
           max={12}
-          required
+          value={taskTimeinHour}
+          disabled={isCreating}
+          onChange={(e) => setTaskTimeinHour(e.target.value)}
         />
 
         <input
@@ -51,6 +90,9 @@ const InputContainer = () => {
           placeholder="min"
           min={0}
           max={60}
+          value={taskTimeInMin}
+          onChange={(e) => setTaskTimeInMin(e.target.value)}
+          disabled={isCreating}
           required
         />
         <button
@@ -64,8 +106,9 @@ const InputContainer = () => {
             marginLeft: "5px",
             background: "gray",
           }}
+          disabled={isCreating}
         >
-          Create
+          {isCreating ? "Creating..." : "Create"}
         </button>
       </form>
     </div>
