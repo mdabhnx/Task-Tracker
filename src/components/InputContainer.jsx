@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { nanoid } from "nanoid";
 
-import { collection, addDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { firestoreApp } from "../firebase/firebase";
+import { Context } from "../_app";
 
 const InputContainer = () => {
+  const { tasks, setTasks } = useContext(Context);
+
   const [isCreating, setIsCreating] = useState(false);
 
   const [taskName, setTaskName] = useState("");
@@ -12,8 +16,12 @@ const InputContainer = () => {
 
   const formSubmitHandler = async (event) => {
     event.preventDefault();
+    const rId = nanoid();
+
     setIsCreating(true);
+
     const taskData = {
+      id: rId,
       task: taskName,
       taskHr: taskTimeinHour === "" ? 0 : taskTimeinHour,
       taskMin: parseInt(taskTimeInMin),
@@ -23,13 +31,13 @@ const InputContainer = () => {
       createdAt: new Date(),
     };
 
+    setTasks([...tasks, taskData]);
+
     try {
-      const docRef = await addDoc(
-        collection(firestoreApp, process.env.REACT_APP_ROOT_COLLECTION_NAME),
+      await setDoc(
+        doc(firestoreApp, process.env.REACT_APP_ROOT_COLLECTION_NAME, rId),
         taskData
       );
-
-      console.log("document has been added to db", docRef.id);
     } catch (error) {
       console.error(error);
     }

@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import InputContainer from "../components/InputContainer";
 import TaskUnit from "../components/TaskUnit";
+import { Context } from "../_app";
 
 const HomePage = () => {
+  const { tasks } = useContext(Context);
+
   return (
     <div
       style={{
@@ -25,7 +28,9 @@ const HomePage = () => {
         Create a New Task
       </header>
 
-      <div style={{ marginTop: "2%" }}>{/* <InputContainer /> */}</div>
+      <div style={{ marginTop: "2%" }}>
+        <InputContainer />
+      </div>
 
       <div style={{ marginTop: "2%" }}>
         <header
@@ -40,10 +45,20 @@ const HomePage = () => {
             marginBottom: "2%",
           }}
         >
-          -- Current Tasks --
+          {tasks.lenght > 0 && <>-- Current Tasks --</>}
         </header>
 
-        <TaskUnit />
+        {tasks.map((task) => {
+          console.log(task);
+          return (
+            <TaskUnit
+              key={task.id}
+              task={task.task}
+              timeInHr={task.taskHr}
+              timeInMin={task.taskMin}
+            />
+          );
+        })}
       </div>
     </div>
   );

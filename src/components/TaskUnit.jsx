@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../styles/taskUnit.css";
 
-const TaskUnit = ({ task = "d3mo task", timeInHr = 0, timeInMin = 5 }) => {
+const TaskUnit = ({ task, timeInHr = 0, timeInMin }) => {
   const [isPaused, setIsPaused] = useState(false);
   const [totalTimeInSec, setTotalTimeInSec] = useState(0);
   const [tickTracker, setTickTracker] = useState(0);
@@ -10,7 +10,7 @@ const TaskUnit = ({ task = "d3mo task", timeInHr = 0, timeInMin = 5 }) => {
   const [leftSec, setLeftSec] = useState("");
 
   useEffect(() => {
-    let xleftHour = "" + totalTimeInSec / 360;
+    let xleftHour = "" + totalTimeInSec / 3600;
     setLeftHour(xleftHour.split(".")[0]);
     let xleftMin = "" + totalTimeInSec / 60;
     setLeftMin(xleftMin.split(".")[0]);
@@ -20,6 +20,7 @@ const TaskUnit = ({ task = "d3mo task", timeInHr = 0, timeInMin = 5 }) => {
 
   useEffect(() => {
     let calTimeInSec = timeInHr * 60 * 60 + timeInMin * 60;
+    console.log(timeInHr, timeInMin, calTimeInSec);
     setTotalTimeInSec(calTimeInSec);
     setTickTracker(calTimeInSec);
   }, [timeInHr, timeInMin]);
