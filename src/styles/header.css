@@ -1,0 +1,14 @@
+.header__container {
+    height: 10%;
+    padding: 10px;
+    width: 100%;
+
+    background-color: rgb(243 243 243);
+    display: flex;
+    justify-content: center;
+}
+
+.header__container header {
+    font-size: 26px;
+    letter-spacing: .5rem;
+}
