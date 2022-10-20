@@ -4,7 +4,7 @@ import "../styles/header.css";
 const Header = () => {
   return (
     <div className="header__container">
-      <header>Task Tracker ⚡</header>
+      <header>⚡ Task Tracker ⚡</header>
     </div>
   );
 };

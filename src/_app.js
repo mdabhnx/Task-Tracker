@@ -1,10 +1,13 @@
 import React from "react";
 import Layout from "./layouts/Layout";
+import HomePage from "./pages/HomePage";
 
 const App = () => {
   return (
     <>
-      <Layout></Layout>
+      <Layout>
+        <HomePage />
+      </Layout>
     </>
   );
 };
