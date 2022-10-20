@@ -1,8 +1,44 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/taskUnit.css";
 
-const TaskUnit = ({ task = "d3mo task", timeInHr = 0, timeInMin = 0 }) => {
+const TaskUnit = ({ task = "d3mo task", timeInHr = 0, timeInMin = 5 }) => {
   const [isPaused, setIsPaused] = useState(false);
+  const [totalTimeInSec, setTotalTimeInSec] = useState(0);
+  const [tickTracker, setTickTracker] = useState(0);
+  const [leftHour, setLeftHour] = useState("");
+  const [leftMin, setLeftMin] = useState("");
+  const [leftSec, setLeftSec] = useState("");
+
+  useEffect(() => {
+    let xleftHour = "" + totalTimeInSec / 360;
+    setLeftHour(xleftHour.split(".")[0]);
+    let xleftMin = "" + totalTimeInSec / 60;
+    setLeftMin(xleftMin.split(".")[0]);
+    let xleftSec = "" + (totalTimeInSec % 60);
+    setLeftSec(xleftSec.split(".")[0]);
+  }, [totalTimeInSec]);
+
+  useEffect(() => {
+    let calTimeInSec = timeInHr * 60 * 60 + timeInMin * 60;
+    setTotalTimeInSec(calTimeInSec);
+    setTickTracker(calTimeInSec);
+  }, [timeInHr, timeInMin]);
+
+  useEffect(() => {
+    let TIME_INTERVEL_CONTROLLER;
+
+    if (totalTimeInSec !== 0 && !isPaused) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      TIME_INTERVEL_CONTROLLER = setInterval(() => {
+        setTotalTimeInSec((time) => time - 1);
+      }, [1000]);
+    } else {
+      clearInterval(TIME_INTERVEL_CONTROLLER);
+    }
+
+    return () => clearInterval(TIME_INTERVEL_CONTROLLER);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tickTracker, isPaused]);
 
   const onPausePlayHandler = () => {
     setIsPaused(!isPaused);
@@ -40,11 +76,17 @@ const TaskUnit = ({ task = "d3mo task", timeInHr = 0, timeInMin = 0 }) => {
             fontSize: "28px",
           }}
         >
-          <p className="lf-hour">00</p>
+          <p className="lf-hour">
+            {leftHour.length < 2 ? "0" + leftHour : leftHour}
+          </p>
           <p>:</p>
-          <p className="lf-min">00</p>
+          <p className="lf-min">
+            {leftMin.length < 2 ? "0" + leftMin : leftMin}
+          </p>
           <p>:</p>
-          <p className="lf-sec">00</p>
+          <p className="lf-sec">
+            {leftSec.length < 2 ? "0" + leftSec : leftSec}
+          </p>
         </div>
         <div
           className="pause"
