@@ -55,6 +55,7 @@ const HomePage = () => {
               key={task.id}
               identifier={task.id}
               task={task.task}
+              completeStatus={task.completeStatus}
               timeInHr={task.taskHr}
               timeInMin={task.taskMin}
             />

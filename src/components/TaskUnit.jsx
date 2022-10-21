@@ -3,7 +3,13 @@ import { doc, updateDoc } from "firebase/firestore";
 import "../styles/taskUnit.css";
 import { firestoreApp } from "../firebase/firebase";
 
-const TaskUnit = ({ identifier, task, timeInHr = 0, timeInMin }) => {
+const TaskUnit = ({
+  identifier,
+  task,
+  timeInHr = 0,
+  timeInMin,
+  completeStatus,
+}) => {
   const [isPaused, setIsPaused] = useState(false);
   const [totalTimeInSec, setTotalTimeInSec] = useState(0);
   const [tickTracker, setTickTracker] = useState(0);
@@ -11,7 +17,13 @@ const TaskUnit = ({ identifier, task, timeInHr = 0, timeInMin }) => {
   const [leftMin, setLeftMin] = useState("");
   const [leftSec, setLeftSec] = useState("");
 
-  const [isCompleted, setIsCompleted] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(completeStatus);
+
+  // useEffect(() => {
+  //   console.log(completeStatus);
+  //   if (completeStatus) {
+  //   }
+  // }, [completeStatus]);
 
   /**
    * @module Time-saving-to-state
@@ -24,6 +36,16 @@ const TaskUnit = ({ identifier, task, timeInHr = 0, timeInMin }) => {
     setLeftMin(xleftMin.split(".")[0]);
     let xleftSec = "" + (totalTimeInSec % 60);
     setLeftSec(xleftSec.split(".")[0]);
+
+    /**
+     * @TODO - <<<Udpate the logic>>>
+     * This logic is so cheap;;
+     * when the time will auto-end it will show that the task time has ended.
+     */
+    if (xleftMin === "0" && xleftHour === "0" && xleftSec === "0") {
+      onCompletedHandler();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalTimeInSec]);
 
   /**
@@ -45,7 +67,7 @@ const TaskUnit = ({ identifier, task, timeInHr = 0, timeInMin }) => {
   useEffect(() => {
     let TIME_INTERVEL_CONTROLLER;
 
-    if (totalTimeInSec !== 0 && !isPaused) {
+    if (totalTimeInSec !== 0 && !isPaused && !isCompleted) {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       TIME_INTERVEL_CONTROLLER = setInterval(() => {
         setTotalTimeInSec((time) => time - 1);
