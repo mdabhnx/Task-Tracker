@@ -34,10 +34,10 @@ const InputContainer = () => {
     setTasks([...tasks, taskData]);
 
     try {
-      // await setDoc(
-      //   doc(firestoreApp, process.env.REACT_APP_ROOT_COLLECTION_NAME, rId),
-      //   taskData
-      // );
+      await setDoc(
+        doc(firestoreApp, process.env.REACT_APP_ROOT_COLLECTION_NAME, rId),
+        taskData
+      );
     } catch (error) {
       console.error(error);
     }

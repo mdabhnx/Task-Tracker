@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { doc, updateDoc } from "firebase/firestore";
 import "../styles/taskUnit.css";
+import { firestoreApp } from "../firebase/firebase";
 
 const TaskUnit = ({ identifier, task, timeInHr = 0, timeInMin }) => {
   const [isPaused, setIsPaused] = useState(false);
@@ -63,9 +65,29 @@ const TaskUnit = ({ identifier, task, timeInHr = 0, timeInMin }) => {
   /**
    * @function Updating the todos in g-cF
    */
-  const onCompletedHandler = () => {
+  const onCompletedHandler = async () => {
     setIsPaused(true);
     setIsCompleted(true);
+
+    try {
+      const unitRef = doc(
+        firestoreApp,
+        process.env.REACT_APP_ROOT_COLLECTION_NAME,
+        identifier
+      );
+
+      await updateDoc(unitRef, {
+        completeStatus: true,
+      });
+
+      console.log("*** data has been updated ***");
+    } catch (error) {
+      console.log(
+        "error occured while updating the docs to completed. \n",
+        error
+      );
+      setIsCompleted(false);
+    }
   };
 
   return (
